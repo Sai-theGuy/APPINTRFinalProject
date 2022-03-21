@@ -1,0 +1,45 @@
+body
+{
+    /*photo resource: https://www.istockphoto.com/photo/doctor-checking-patients-blood-pressure-gm928085656-254567296*/
+    background-image: url(../resources/bg.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    line-height: 50px;
+    font-family: Lucida, sans-serif;
+    font-weight: Normal;
+}
+
+.form-main
+{
+	width: 400px;
+    background-color: white;
+    padding: 20px;
+    border: 1px #6c757d solid;
+    border-top: 10px #6c757d solid;
+    border-radius: 5px;
+}
+body .form-holder
+{
+    width: 100%;
+    padding-top: 8%;
+    padding-bottom: 8%;
+    
+}
+
+#bp-app .row
+{
+    margin: 5px;
+    background-color: transparent;
+}
+
+.notify-error
+{
+    color: firebrick;
+    background-color: coral;
+}
+
+.btn-outline-primary:disabled
+{
+    border-color: #6c757d;
+    color: #6c757d;
+}

@@ -1,0 +1,37 @@
+    <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    
+    mysql> SELECT CURRENT_TIMESTAMP();
+Result: '2014-01-28 13:48:41'
+
+now()
+    
+    
+            	
+            	foreach(station in this.stations)
+                		{
+                			if(station === this.start){
+                				foundStart = true;
+                			}
+                		}
+                	
+             
+            var i = this.stations.size() - 1;
+//    		for( ; i >= 0; i--){
+//    			if(this.stations[i] == this.start){
+//    				i--;
+//    				for( ; i >= 0; i--){
+//    					this.passed++;
+//            		}
+//    			}
+                	var i = 0;
+//    		for( ; i < this.stations.size(); i++){
+//    			if(this.stations[i] == this.start){
+//    				i++;
+//    				for( ; i < this.stations.size(); i++ ){
+//    					this.passed++;
+//    				}
+//    			}
+//    		}
