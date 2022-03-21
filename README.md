@@ -1,2 +1,2 @@
-# -APPINTR-FinalProject
+# APPINTR-FinalProject
 APPINTR Final Project
