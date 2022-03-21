@@ -3,6 +3,7 @@
 
 # Log file
 *.log
+/Final Project/src/main/webapp/WEB-INF/web.xml
 
 # BlueJ files
 *.ctxt
