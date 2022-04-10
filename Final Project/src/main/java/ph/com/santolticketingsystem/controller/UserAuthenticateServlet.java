@@ -1,6 +1,7 @@
 package ph.com.santolticketingsystem.controller;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -8,7 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import ph.com.santolticketingsystem.model.user.authentcator.AuthenticateUser;
+import ph.com.santolticketingsystem.model.information.LoginCredential;
+import ph.com.santolticketingsystem.model.information.LoginInformation;
+import ph.com.santolticketingsystem.utility.singleton.SingletonDB;
 
 
 @WebServlet("/UserAuthenticate")
@@ -26,13 +29,16 @@ public class UserAuthenticateServlet extends HttpServlet {
 		 String PassWord = request.getParameter("PassWord");
 			
 		// these are temporary params, these should come from database
-		String uname = getServletContext().getInitParameter("Username");
-		String pword = getServletContext().getInitParameter("Password");
-		String ptype = getServletContext().getInitParameter("PassengerType");
+		 LoginCredential inputCreds = new LoginCredential(UserName, PassWord);
+		 
+		 LoginInformation li = SingletonDB.selectLogin(
+			getServletContext().getInitParameter("jdbcDriver")
+			, getServletContext().getInitParameter("jdbcUrl")
+			, getServletContext().getInitParameter("dbUserName")
+			, getServletContext().getInitParameter("dbUserPassword")
+			,inputCreds);
 				
-		AuthenticateUser au = new AuthenticateUser(uname, pword);
-		// validate login
-		if(au.Authenticate(UserName, PassWord)){
+		if(li != null){
 			// if valid login
 			// start session
 			HttpSession session = request.getSession();
@@ -40,10 +46,10 @@ public class UserAuthenticateServlet extends HttpServlet {
 			String passengerType = (String)session.getAttribute("passengerType");
 			
 			if(username == null && passengerType == null){
-				username = UserName;
+				username = li.getUserName();
 				session.setAttribute("username", username);
 						
-				passengerType = ptype;
+				passengerType = li.getPassengerType();
 				session.setAttribute("passengerType", passengerType);
 				System.out.println("Session start: " + username + ", " + passengerType);
 				System.out.println();
@@ -63,6 +69,7 @@ public class UserAuthenticateServlet extends HttpServlet {
 		else {
 			// if not valid login
 			// set a error message first before sending the response
+			request.setAttribute("errorMessage", "Session is Invalid");
 			request.getRequestDispatcher("Login").forward(request, response);
 		}
 				

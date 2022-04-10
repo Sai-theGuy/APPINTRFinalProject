@@ -1,5 +1,7 @@
 package ph.com.santolticketingsystem.model.user.transaction;
 
+import java.util.Iterator;
+
 public class UserTransaction {
 	
 	// for retrieval
@@ -65,5 +67,5 @@ public class UserTransaction {
 	public void setPrice(Double price) {
 		Price = price;
 	}
-	
+
 }

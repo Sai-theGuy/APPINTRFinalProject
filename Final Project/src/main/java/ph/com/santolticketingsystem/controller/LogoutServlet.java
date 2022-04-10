@@ -29,7 +29,11 @@ public class LogoutServlet extends HttpServlet {
 			request.getRequestDispatcher("Login").forward(request, response);
 		}
 		else {
-			session.invalidate();
+			session.removeAttribute("username");
+			session.removeAttribute("passengerType");
+			System.out.println("You have successfully logged out.");
+			System.out.println();
+			session.setAttribute("successMessage", "You have successfully logged out.");
 	        request.getRequestDispatcher("Login").include(request, response);
 	        return;
 		}

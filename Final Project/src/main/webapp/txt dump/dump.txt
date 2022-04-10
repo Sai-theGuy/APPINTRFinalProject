@@ -35,3 +35,52 @@ now()
 //    				}
 //    			}
 //    		}
+
+
+			Double totalPrice = 0.00;
+			int length = (int) request.getAttribute("length");
+			for (int i = 0; i <= length; i++) {
+				
+				String TransactionID = "TransactionID" + i;
+				String Username = "Username" + i;
+				String DateTime = "DateTime" + i;
+				String Start = "Start" + i;
+				String Destination = "Destination" + i;
+				String Price = "Price" + i;
+				
+				
+				(String)request.getAttribute(TransactionID)
+(String)request.getAttribute(Username)
+(String)request.getAttribute(DateTime)
+(String)request.getAttribute(Start)
+(String)request.getAttribute(Destination)
+(String)request.getAttribute(Price)
+
+
+//		int i = 0;
+//		while(trans.hasNext()) {
+//			UserTransaction transact = (UserTransaction) trans.next();
+//			
+//			request.setAttribute("TransactionID" + String.valueOf(i), transact.getTransactionID());
+//			request.setAttribute("Username" + String.valueOf(i), transact.getUsername());
+//			request.setAttribute("DateTime" + String.valueOf(i), transact.getDateTime());
+//			request.setAttribute("Start" + String.valueOf(i), transact.getStart());
+//			request.setAttribute("Destination" + String.valueOf(i), transact.getDestination());
+//			request.setAttribute("Price" + String.valueOf(i), transact.getPrice());
+//			
+//			System.out.println(transact.getTransactionID() + " " + transact.getUsername() + " " + " " + transact.getDateTime() 
+//				+ " " + transact.getStart() + " " + transact.getDestination() + " " + transact.getPrice() );
+//			
+//			i++;
+//			
+//		}
+//		request.setAttribute("length", i);
+
+
+Double totalPrice = 0.00;
+				UserTransactions trans = (UserTransactions)request.getAttribute("transactions");
+				Iterator<UserTransaction> transactions = trans.createIterator();
+				while(transactions.hasNext()){
+				UserTransaction transaction = (UserTransaction) transactions.next();
+
+

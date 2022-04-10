@@ -29,27 +29,39 @@ public class TicketServlet extends HttpServlet {
 		String username = (String)session.getAttribute("username");
 		String passengerType = (String)session.getAttribute("passengerType");
 		
+		System.out.println();
+		System.out.println("Current session state (TransactionsServlet): " + username + ", " + passengerType);
+		System.out.println();
+		
 		if(username == null && passengerType == null) {
-			request.getRequestDispatcher("Login").forward(request, response);
+			String UserName = request.getParameter("UserName");
+			String PassWord = request.getParameter("PassWord");
+			
+			request.setAttribute("UserName", UserName);
+			request.setAttribute("PassWord", PassWord);
+			request.getRequestDispatcher("UserAuthenticate").forward(request, response);
 		}
 		else {
 			TicketMachineFacade tran = new TicketMachineFacade();
 			
 			UserTransaction transaction = tran.buyTicket(username, start, end, bound, passengerType);
 			
-			//pass to database
-			SingletonDB.createTransactionsTable(
-					getServletContext().getInitParameter("jdbcDriver")
-					,getServletConfig().getInitParameter("jdbcUrl")
-					,getServletConfig().getInitParameter("dbUserName") 
-					,getServletConfig().getInitParameter("dbUserPassword"));
+			System.out.println(transaction);
 			
+			SingletonDB.createTransactionsTable(
+				getServletContext().getInitParameter("jdbcDriver")
+				, getServletContext().getInitParameter("jdbcUrl")
+				, getServletContext().getInitParameter("dbUserName")
+				, getServletContext().getInitParameter("dbUserPassword")
+			);
+			//pass to database
 			SingletonDB.insertTransaction(
-					getServletContext().getInitParameter("jdbcDriver")
-					,getServletConfig().getInitParameter("jdbcUrl")
-					,getServletConfig().getInitParameter("dbUserName")
-					,getServletConfig().getInitParameter("dbUserPassword")
-					,transaction.getUsername(), transaction.getStart(), transaction.getDestination(), transaction.getPrice().toString());
+				getServletContext().getInitParameter("jdbcDriver")
+				, getServletContext().getInitParameter("jdbcUrl")
+				, getServletContext().getInitParameter("dbUserName")
+				, getServletContext().getInitParameter("dbUserPassword")
+				,transaction
+			);
 			//redirect to
 			request.getRequestDispatcher("Transaction").forward(request, response);
 		}

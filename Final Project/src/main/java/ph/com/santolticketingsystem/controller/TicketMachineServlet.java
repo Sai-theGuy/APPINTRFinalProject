@@ -18,11 +18,6 @@ public class TicketMachineServlet extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-//		HttpSession session = request.getSession();
-//		String username = (String)session.getAttribute("username");
-//		String discounted = (String)session.getAttribute("discounted");
-//		session.setAttribute("username", username);
-//		session.setAttribute("discounted", discounted);
 		HttpSession session = request.getSession();
 		String username = (String)session.getAttribute("username");
 		String passengerType = (String)session.getAttribute("passengerType");
@@ -30,7 +25,21 @@ public class TicketMachineServlet extends HttpServlet {
 		System.out.println("Current session state (TicketMachineServlet): " + username + ", " + passengerType);
 		System.out.println();
 		
-		request.getRequestDispatcher("buyticket.jsp").forward(request, response);
+		if(username == null && passengerType == null) {
+			String UserName = request.getParameter("UserName");
+			String PassWord = request.getParameter("PassWord");
+			
+			request.setAttribute("UserName", UserName);
+			request.setAttribute("PassWord", PassWord);
+			request.getRequestDispatcher("UserAuthenticate").forward(request, response);
+		}
+		else {
+			session.setAttribute("username", username);
+			session.setAttribute("passengerType", passengerType);
+			System.out.println("Current session state (TicketMachineServlet): " + username + ", " + passengerType);
+			System.out.println();
+			request.getRequestDispatcher("buyticket.jsp").forward(request, response);
+		}
 	}
 
 }

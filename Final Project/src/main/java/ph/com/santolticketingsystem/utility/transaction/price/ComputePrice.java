@@ -36,29 +36,31 @@ public class ComputePrice {
 	
 	
 	public Double Compute() {
-		if(this.bound == "northbound"){
+		if(this.bound.equalsIgnoreCase("northbound")){
 			int a = stations.indexOf(start);
 			int b = stations.indexOf(end);
 			this.passed = a - b;
 			int c = passed * 4;
 			this.price += c;
     	}
-		else if(this.bound == "southbound"){
+		else if(this.bound.equalsIgnoreCase("southbound")){
 			int a = stations.indexOf(start);
 			int b = stations.indexOf(end);
 			this.passed = b - a;
 			int c = passed * 4;
 			this.price += c;
     	}
-		if(this.passengerType.equalsIgnoreCase("PWD") && this.price >= 50)
+		if(this.passengerType.equalsIgnoreCase("PWD") && this.price >= 100)
 		{
 			this.price *= 0.20;
-			
 		}
-		else if(this.passengerType.equalsIgnoreCase("Student") && this.price >= 50)
+		else if(this.passengerType.equalsIgnoreCase("Student") && this.price >= 100)
 		{
 			this.price *= 0.20;
-			
+		}
+		else if(this.passengerType.equalsIgnoreCase("Senior") && this.price >= 100)
+		{
+			this.price *= 0.20;
 		}
 		return this.price;
 	}

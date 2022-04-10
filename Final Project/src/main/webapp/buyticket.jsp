@@ -10,95 +10,105 @@
     <link rel="stylesheet" href="css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>            
-	<title>SanTol Ticketing System</title>
+	<title>Santol Ticketing System</title>
 </head>
 <body>
-	<div class="row row-cols-lg-auto form-holder">
-		<div id="ticket-app" class="container container-lg form-main">
-			<div class="row row-cols-lg-auto">
-	        	<h1>Buy Ticket</h1>
+	<%@ include file="partial/_navbar.jsp"%>
+	<div class="container">
+		<div class="row row-cols-lg-auto">
+			<div class="col-lg-1 align-content-center back-div">
+				<a href="Home">
+                	<i class="fa fa-angle-left fa-2x" aria-hidden="true"><span class="back">Back</span></i>
+                </a>
 			</div>
-			<form method="post" action="Ticket">
+		</div>
+		<div class="row row-cols-lg-auto form-holder">
+			<div id="ticket-app" class="container container-lg form-main">
 				<div class="row row-cols-lg-auto">
-					<div class="col-lg-5 d-flex align-content-center flex-wrap">
-						<label class="form col-form-label">Starting Point: </label>
-					</div>			
-					<div class="col-lg-7 d-flex align-content-center flex-wrap">
-	                    <select name='start' v-model="start" class="form form-select" @change="determineDisplay()">
-	                    	<option value=''>Select Starting Point</option>
-		                    <optgroup label="Quezon City Stations">
-		                    	<option value='North-Avenue'>North Avenue</option>
-		                    	<option value='Quezon-Ave'>Quezon Avenue</option>
-								<option value='Kamuning'>Kamuning</option>
-								<option value='Cubao'>Cubao</option>
-								<option value='Santolan-Annapolis'>Santolan-Annapolis</option>
-		                    </optgroup>
-							<optgroup label="Pasig City Stations">
-		                    	<option value='Ortigas'>Ortigas</option>
-		                    </optgroup>
-		                    <optgroup label="Mandaluyong City Stations">
-		                    	<option value='Shaw-Boulevard'>Shaw Blvd.</option>
-								<option value='Boni-Avenue'>Boni Avenue</option>
-		                    </optgroup>
-		                    <optgroup label="Makati City Stations">
-		                    	<option value='Guadalupe'>Guadalupe</option>
-								<option value='Buendia'>Buendia</option>
-								<option value='Ayala'>Ayala</option>
-								<option value='Magallanes'>Magallanes</option>
-		                    </optgroup>
-		                    <optgroup label="Pasay City Stations">
-		                    	<option value='Taft-Avenue'>Taft Avenue</option>
-		                    </optgroup>
-						</select>
+		        	<h1>Buy Ticket</h1>
+				</div>
+				<form method="post" action="Ticket">
+					<div class="row row-cols-lg-auto">
+						<div class="col-lg-5 d-flex align-content-center flex-wrap">
+							<label class="form col-form-label">Starting Point: </label>
+						</div>			
+						<div class="col-lg-7 d-flex align-content-center flex-wrap">
+		                    <select name='start' v-model="start" class="form form-select" @change="determineDisplay()">
+		                    	<option value=''>Select Starting Point</option>
+			                    <optgroup label="Quezon City Stations">
+			                    	<option value='North-Avenue'>North Avenue</option>
+			                    	<option value='Quezon-Ave'>Quezon Avenue</option>
+									<option value='Kamuning'>Kamuning</option>
+									<option value='Cubao'>Cubao</option>
+									<option value='Santolan-Annapolis'>Santolan-Annapolis</option>
+			                    </optgroup>
+								<optgroup label="Pasig City Stations">
+			                    	<option value='Ortigas'>Ortigas</option>
+			                    </optgroup>
+			                    <optgroup label="Mandaluyong City Stations">
+			                    	<option value='Shaw-Boulevard'>Shaw Blvd.</option>
+									<option value='Boni-Avenue'>Boni Avenue</option>
+			                    </optgroup>
+			                    <optgroup label="Makati City Stations">
+			                    	<option value='Guadalupe'>Guadalupe</option>
+									<option value='Buendia'>Buendia</option>
+									<option value='Ayala'>Ayala</option>
+									<option value='Magallanes'>Magallanes</option>
+			                    </optgroup>
+			                    <optgroup label="Pasay City Stations">
+			                    	<option value='Taft-Avenue'>Taft Avenue</option>
+			                    </optgroup>
+							</select>
+						</div>
 					</div>
-				</div>
-				<div class="row row-cols-lg-auto">
-					<div class="col-lg-12 d-flex align-content-center flex-wrap">
-	                    <label><input type="radio" name="direction" v-model="bound" value="northbound" @change="determineDisplay()"> North bound</label>
-					</div>		
-				</div>
-				<div class="row row-cols-lg-auto">
-					<div class="col-lg-12 d-flex align-content-center flex-wrap">
-						<label><input type="radio" name="direction" v-model="bound" value="southbound"  @change="determineDisplay()"> South bound</label>
+					<div class="row row-cols-lg-auto">
+						<div class="col-lg-12 d-flex align-content-center flex-wrap">
+		                    <label><input type="radio" name="direction" v-model="bound" value="northbound" @change="determineDisplay()"> North bound</label>
+						</div>		
 					</div>
-				</div>
-				<div class="row row-cols-lg-auto" title="Select Start Point and Bound to enable Select Destination box">
-					<div class="col-lg-5 d-flex align-content-center flex-wrap">
-						<label class="form col-form-label">End Destination: </label>
-					</div>			
-					<div class="col-lg-7 d-flex align-content-center flex-wrap">
-	                    <select :disabled="isDisabledEnd" name='end' v-model="end" class="form form-select" >
-	                    <option value=''>Select Destination</option>
-		                    <optgroup v-if="displayQuezon" label="Quezon City Stations">
-		                    	<option v-if="stations[0].display" value='North-Avenue'>{{stations[0].label}}</option>
-		                    	<option v-if="stations[1].display" value='Quezon-Ave'>{{stations[1].label}}</option>
-								<option v-if="stations[2].display" value='Kamuning'>{{stations[2].label}}</option>
-								<option v-if="stations[3].display" value='Cubao'>{{stations[3].label}}</option>
-								<option v-if="stations[4].display" value='Santolan-Annapolis'>{{stations[4].label}}</option>
-		                    </optgroup>
-							<optgroup v-if="displayPasig" label="Pasig City Stations">
-		                    	<option v-if="stations[5].display"value='Ortigas'>{{stations[5].label}}</option>
-		                    </optgroup>
-		                    <optgroup v-if="displayMandaluyong" label="Mandaluyong City Stations">
-		                    	<option v-if="stations[6].display" value='Shaw-Boulevard'>{{stations[6].label}}</option>
-								<option v-if="stations[7].display" value='Boni-Avenue'>{{stations[7].label}}</option>
-		                    </optgroup>
-		                    <optgroup v-if="displayMakati" label="Makati City Stations">
-		                    	<option v-if="stations[8].display" value='Guadalupe'>{{stations[8].label}}</option>
-								<option v-if="stations[9].display" value='Buendia'>{{stations[9].label}}</option>
-								<option v-if="stations[10].display" value='Ayala'>{{stations[10].label}}</option>
-								<option v-if="stations[11].display" value='Magallanes'>{{stations[11].label}}</option>
-		                    </optgroup>
-		                    <optgroup v-if="displayPasay" label="Pasay City Stations">
-		                    	<option v-if="stations[12].display" value='Taft-Avenue'>{{stations[12].label}}</option>
-		                    </optgroup>
-						</select>
+					<div class="row row-cols-lg-auto">
+						<div class="col-lg-12 d-flex align-content-center flex-wrap">
+							<label><input type="radio" name="direction" v-model="bound" value="southbound"  @change="determineDisplay()"> South bound</label>
+						</div>
 					</div>
-				</div>
-				<div class="col-lg-12 ml-auto p-2 d-flex justify-content-end">
-                	<input :disabled="isDisabled" type="submit" value="Buy Ticket" class="btn btn-dark">
-                </div>
-			</form>
+					<div class="row row-cols-lg-auto" title="Select Start Point and Bound to enable Select Destination box">
+						<div class="col-lg-5 d-flex align-content-center flex-wrap">
+							<label class="form col-form-label">End Destination: </label>
+						</div>			
+						<div class="col-lg-7 d-flex align-content-center flex-wrap">
+		                    <select :disabled="isDisabledEnd" name='end' v-model="end" class="form form-select" >
+		                    <option value=''>Select Destination</option>
+			                    <optgroup v-if="displayQuezon" label="Quezon City Stations">
+			                    	<option v-if="stations[0].display" value='North-Avenue'>{{stations[0].label}}</option>
+			                    	<option v-if="stations[1].display" value='Quezon-Ave'>{{stations[1].label}}</option>
+									<option v-if="stations[2].display" value='Kamuning'>{{stations[2].label}}</option>
+									<option v-if="stations[3].display" value='Cubao'>{{stations[3].label}}</option>
+									<option v-if="stations[4].display" value='Santolan-Annapolis'>{{stations[4].label}}</option>
+			                    </optgroup>
+								<optgroup v-if="displayPasig" label="Pasig City Stations">
+			                    	<option v-if="stations[5].display"value='Ortigas'>{{stations[5].label}}</option>
+			                    </optgroup>
+			                    <optgroup v-if="displayMandaluyong" label="Mandaluyong City Stations">
+			                    	<option v-if="stations[6].display" value='Shaw-Boulevard'>{{stations[6].label}}</option>
+									<option v-if="stations[7].display" value='Boni-Avenue'>{{stations[7].label}}</option>
+			                    </optgroup>
+			                    <optgroup v-if="displayMakati" label="Makati City Stations">
+			                    	<option v-if="stations[8].display" value='Guadalupe'>{{stations[8].label}}</option>
+									<option v-if="stations[9].display" value='Buendia'>{{stations[9].label}}</option>
+									<option v-if="stations[10].display" value='Ayala'>{{stations[10].label}}</option>
+									<option v-if="stations[11].display" value='Magallanes'>{{stations[11].label}}</option>
+			                    </optgroup>
+			                    <optgroup v-if="displayPasay" label="Pasay City Stations">
+			                    	<option v-if="stations[12].display" value='Taft-Avenue'>{{stations[12].label}}</option>
+			                    </optgroup>
+							</select>
+						</div>
+					</div>
+					<div class="col-lg-12 ml-auto p-2 d-flex justify-content-end">
+	                	<input :disabled="isDisabled" type="submit" value="Buy Ticket" class="btn btn-dark">
+	                </div>
+				</form>
+			</div>
 		</div>
 	</div>
 	<script src="https://unpkg.com/vue@3"></script>
@@ -193,5 +203,6 @@
         })
         .mount('#ticket-app')
     </script>
+ <%@ include file="partial/_footer.jsp"%>
 </body>
 </html>

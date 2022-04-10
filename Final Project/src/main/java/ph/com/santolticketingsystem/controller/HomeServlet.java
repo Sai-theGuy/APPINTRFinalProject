@@ -34,12 +34,10 @@ public class HomeServlet extends HttpServlet {
 		}
 		else {
 			session.setAttribute("username", username);
-			
 			session.setAttribute("passengerType", passengerType);
 			System.out.println("Current session state (HomeServlet): " + username + ", " + passengerType);
 			System.out.println();
 			request.getRequestDispatcher("home.jsp").forward(request, response);
 		}
 	}
-
 }

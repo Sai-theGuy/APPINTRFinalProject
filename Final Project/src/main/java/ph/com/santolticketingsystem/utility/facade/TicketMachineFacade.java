@@ -14,5 +14,4 @@ public class TicketMachineFacade implements Facade{
 		
 		return ticketTrip;
 	}
-	
 }

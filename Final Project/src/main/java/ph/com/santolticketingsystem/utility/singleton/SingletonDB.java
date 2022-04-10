@@ -1,9 +1,19 @@
 package ph.com.santolticketingsystem.utility.singleton;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.mindrot.jbcrypt.BCrypt;
+
+import ph.com.santolticketingsystem.model.information.LoginCredential;
+import ph.com.santolticketingsystem.model.information.LoginInformation;
+import ph.com.santolticketingsystem.model.information.UserInformation;
 import ph.com.santolticketingsystem.model.user.transaction.UserTransaction;
+import ph.com.santolticketingsystem.model.user.transaction.UserTransactions;
 
 public class SingletonDB {
 	//this is defaulted to null
@@ -133,12 +143,10 @@ public class SingletonDB {
 			}
 		}
 		
-		public static void insertUser(String driver, String url, String userName, String password, String FirstName, String LastName, String UserName, String PassWord, String PassengerType) {
-			String add = "('"  + FirstName + "','"  + LastName + "','" + PassengerType + "','" + UserName + "','" + PassWord + "')";
-			String sql = 
-					"INSERT IGNORE INTO logins(FirstName, LastName, PassengerType, UserName, PassWord) "
-					+ "VALUES"
-					+ add;
+		public static void insertUser(String driver, String url, String userName, String password, UserInformation ui) {
+			String sql = "INSERT INTO users" 
+					+ " (FirstName, LastName, PassengerType, UserName, PassWord) " 
+					+ " VALUES(?, ?, ?, ?, ?);";
 			
 			// initialize the jdbc configuration variables
 			jdbcUrl = url;
@@ -152,6 +160,12 @@ public class SingletonDB {
 				if (connection != null) {
 					// create a PreparedStatement object
 					PreparedStatement prep = connection.prepareStatement(sql);
+					
+					prep.setString(1, ui.getFirstName());
+					prep.setString(2, ui.getLastName());
+					prep.setString(3, ui.getPassengerType());
+					prep.setString(4, ui.getUsername());
+					prep.setString(5, BCrypt.hashpw(ui.getPassword(), BCrypt.gensalt()));
 		
 					// now commit this to the database table
 					prep.executeUpdate();
@@ -161,12 +175,10 @@ public class SingletonDB {
 			}
 		}
 		
-		public static void insertLogin(String driver, String url, String userName, String password, String UserName, String PassWord, String PassengerType) {
-			String add = "('" + UserName + "','" + PassWord + "','" + PassengerType + "')";
+		public static void insertLogin(String driver, String url, String userName, String password, LoginInformation li) {
 			String sql = 
 					"INSERT IGNORE INTO logins(UserName, PassWord, PassengerType) "
-					+ "VALUES"
-					+ add;
+					+ "VALUES(?, ?, ?);";
 
 			
 			// initialize the jdbc configuration variables
@@ -181,6 +193,10 @@ public class SingletonDB {
 				if (connection != null) {
 					// create a PreparedStatement object
 					PreparedStatement prep = connection.prepareStatement(sql);
+
+					prep.setString(1, li.getUserName());
+					prep.setString(2, BCrypt.hashpw(li.getPassword(), BCrypt.gensalt()));
+					prep.setString(3, li.getPassengerType());
 		
 					// now commit this to the database table
 					prep.executeUpdate();
@@ -190,12 +206,10 @@ public class SingletonDB {
 			}
 		}
 		
-		public static void insertTransaction(String driver, String url, String userName, String password, String UserName, String Start, String End, String Price) {
-			String add = "('" + UserName + "','"  + Start + "', now(),'" + End + "','" + Price + "')";
+		public static void insertTransaction(String driver, String url, String userName, String password, UserTransaction ut) {
 			String sql = 
-					"INSERT IGNORE INTO Transactions(UserName, DateTime, Start, End, Price) "
-					+ "VALUES"
-					+ add;
+					"INSERT INTO Transactions(UserName, DateTime, Start, Stop, Price) "
+					+ "VALUES(?, now(), ?, ?, ?);";
 			
 			// initialize the jdbc configuration variables
 			jdbcUrl = url;
@@ -206,53 +220,65 @@ public class SingletonDB {
 			try {
 				connection = getDBConnection();
 		
-				if (connection != null) {
-					// create a PreparedStatement object
-					PreparedStatement prep = connection.prepareStatement(sql);
-		
-					// now commit this to the database table
-					prep.executeUpdate();
-				}
-			} catch (SQLException sqle) {
-				System.err.println(sqle.getMessage());
-			}
-		}
-		
-		public static ArrayList<String> selectLogin(String driver, String url, String userName, String password, String name, String UserName, String PassWord) {
-			
-			String sql = "SELECT * FROM logins WHERE UserName = " + UserName + " AND PassWord = " + PassWord + ";";
-			
-			// initialize the jdbc configuration variables
-			jdbcUrl = url;
-			jdbcDriver = driver;
-			dbUserName = userName;
-			dbPassword = password;
-		
-			try {
-				connection = getDBConnection();
-				ArrayList<String> sheeesh = new ArrayList<String>();
 				if (connection != null) {
 					// create a PreparedStatement object
 					PreparedStatement prep = connection.prepareStatement(sql);
 					
-					prep.setString(1, name);
+					prep.setString(1, ut.getUsername());
+					prep.setString(2, ut.getStart());
+					prep.setString(3, ut.getDestination());
+					prep.setDouble(4, ut.getPrice());
+		
+					// now commit this to the database table
+					prep.executeUpdate();
+				}
+			} catch (SQLException sqle) {
+				System.err.println(sqle.getMessage());
+			}
+		}
+		
+		public static LoginInformation selectLogin(String driver, String url, String userName, String password, LoginCredential inputCreds) {
+			String sql = "SELECT * FROM logins WHERE UserName = ?";
+			
+			// initialize the jdbc configuration variables
+			jdbcUrl = url;
+			jdbcDriver = driver;
+			dbUserName = userName;
+			dbPassword = password;
+			
+			LoginInformation sheeesh = null;
+		
+			try {
+				connection = getDBConnection();
+				if (connection != null) {
+					// create a PreparedStatement object
+					PreparedStatement prep = connection.prepareStatement(sql);
+					
+					prep.setString(1, inputCreds.getUserName());
+					
 					// now commit this to the database table
 					ResultSet rs = prep.executeQuery();
 					// take result set
-					sheeesh.add(rs.getString(1));
-					sheeesh.add(rs.getString(2));
-					sheeesh.add(rs.getString(3));
+					while (rs.next()) {
+						if(! BCrypt.checkpw(inputCreds.getPassword(), rs.getString("PassWord"))) {
+							return null;
+						}
+						sheeesh = new LoginInformation();
+						sheeesh.setUserName(rs.getString("UserName"));
+						sheeesh.setPassengerType(rs.getString("PassengerType"));
+					}
 				}
-				return sheeesh;
+				
 			} catch (SQLException sqle) {
 				System.err.println(sqle.getMessage());
 				return null;
 			}
+			return sheeesh;
 		}
 		
-		public static ArrayList<UserTransaction> selectTransactions(String driver, String url, String userName, String password, String name) {
+		public static UserTransactions selectTransactions(String driver, String url, String userName, String password, String username) {
 			
-			String sql = "SELECT * FROM userTransactions";
+			String sql = "SELECT * FROM transactions WHERE UserName = ?;";
 			
 			// initialize the jdbc configuration variables
 			jdbcUrl = url;
@@ -262,24 +288,31 @@ public class SingletonDB {
 		
 			try {
 				connection = getDBConnection();
-				ArrayList<UserTransaction> trans1 = new ArrayList<UserTransaction>();
+				UserTransactions transactions = new UserTransactions();
 				
-				int stockLeft = 0;
 				if (connection != null) {
 					// create a PreparedStatement object
 					PreparedStatement prep = connection.prepareStatement(sql);
 					
-					prep.setString(1, name);
+					prep.setString(1, username);
 					// now commit this to the database table
 					ResultSet rs = prep.executeQuery();
 					// take result set
 					while(rs.next())
 					{
-						UserTransaction trans2 = new UserTransaction(rs.getInt(0), rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getDouble(1));
-						trans1.add(trans2);
+						UserTransaction transaction = new UserTransaction(
+							rs.getInt("id")
+							, rs.getString("UserName")
+							, rs.getString("DateTime")
+							, rs.getString("Start")
+							, rs.getString("Stop")
+							, rs.getDouble("Price")
+						);
+						
+						transactions.addTransaction(transaction);
 					}
 				}
-				return trans1;
+				return transactions;
 			} catch (SQLException sqle) {
 				System.err.println(sqle.getMessage());
 				return null;

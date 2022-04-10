@@ -26,7 +26,21 @@ public class TransactionServlet extends HttpServlet {
 		System.out.println("Current session state (TransactionServlet): " + username + ", " + passengerType);
 		System.out.println();
 		
-		request.getRequestDispatcher("Transactions").forward(request, response);
+		if(username == null && passengerType == null) {
+			String UserName = request.getParameter("UserName");
+			String PassWord = request.getParameter("PassWord");
+			
+			request.setAttribute("UserName", UserName);
+			request.setAttribute("PassWord", PassWord);
+			request.getRequestDispatcher("UserAuthenticate").forward(request, response);
+		}
+		else {
+			session.setAttribute("username", username);
+			session.setAttribute("passengerType", passengerType);
+			System.out.println("Current session state (TransactionServlet): " + username + ", " + passengerType);
+			System.out.println();
+			request.getRequestDispatcher("Transactions").forward(request, response);
+		}
 	}
 
 }
