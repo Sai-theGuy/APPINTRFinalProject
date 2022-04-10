@@ -5,8 +5,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-
 import org.mindrot.jbcrypt.BCrypt;
 
 import ph.com.santolticketingsystem.model.information.LoginCredential;

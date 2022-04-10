@@ -21,6 +21,7 @@ public class TicketServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
 		String start = request.getParameter("start");
 		String end = request.getParameter("end");
 		String bound = request.getParameter("direction");
@@ -29,8 +30,7 @@ public class TicketServlet extends HttpServlet {
 		String username = (String)session.getAttribute("username");
 		String passengerType = (String)session.getAttribute("passengerType");
 		
-		System.out.println();
-		System.out.println("Current session state (TransactionsServlet): " + username + ", " + passengerType);
+		System.out.println("Current session state (TicketServlet): " + username + ", " + passengerType);
 		System.out.println();
 		
 		if(username == null && passengerType == null) {
@@ -39,6 +39,8 @@ public class TicketServlet extends HttpServlet {
 			
 			request.setAttribute("UserName", UserName);
 			request.setAttribute("PassWord", PassWord);
+			System.out.println("Redirecting to UserAuthenticate (TicketServlet)");
+			System.out.println();
 			request.getRequestDispatcher("UserAuthenticate").forward(request, response);
 		}
 		else {
@@ -63,6 +65,8 @@ public class TicketServlet extends HttpServlet {
 				,transaction
 			);
 			//redirect to
+			System.out.println("Redirecting to Transaction (TicketServlet)");
+			System.out.println();
 			request.getRequestDispatcher("Transaction").forward(request, response);
 		}
 	}

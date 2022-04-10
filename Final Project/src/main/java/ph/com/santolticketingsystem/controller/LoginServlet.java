@@ -18,18 +18,20 @@ public class LoginServlet extends HttpServlet {
 	}
  
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
 		HttpSession session = request.getSession();
 		String username = (String)session.getAttribute("username");
 		String passengerType = (String)session.getAttribute("passengerType");
 		
 		System.out.println("Current session state (LoginServlet): " + username + ", " + passengerType);
-		
+		System.out.println();
 		
 		if(username != null && passengerType != null){	
 			request.getRequestDispatcher("Home").forward(request, response);
 		}	
 		else {
 			System.out.println("Redirecting to index.jsp (LoginServlet)");
+			System.out.println();
 			request.getRequestDispatcher("index.jsp").forward(request, response);
 		}
 		

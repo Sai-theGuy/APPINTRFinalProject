@@ -24,18 +24,23 @@ public class HomeServlet extends HttpServlet {
 		String username = (String)session.getAttribute("username");
 		String passengerType = (String)session.getAttribute("passengerType");
 		
+		System.out.println("Current session state (HomeServlet): " + username + ", " + passengerType);
+		System.out.println();
+		
 		if(username == null && passengerType == null) {
 			String UserName = request.getParameter("UserName");
 			String PassWord = request.getParameter("PassWord");
 			
 			request.setAttribute("UserName", UserName);
 			request.setAttribute("PassWord", PassWord);
+			System.out.println("Redirecting to UserAuthenticate (HomeServlet)");
+			System.out.println();
 			request.getRequestDispatcher("UserAuthenticate").forward(request, response);
 		}
 		else {
 			session.setAttribute("username", username);
 			session.setAttribute("passengerType", passengerType);
-			System.out.println("Current session state (HomeServlet): " + username + ", " + passengerType);
+			System.out.println("Redirecting to home.jsp (HomeServlet)");
 			System.out.println();
 			request.getRequestDispatcher("home.jsp").forward(request, response);
 		}

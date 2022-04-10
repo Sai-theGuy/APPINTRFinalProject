@@ -1,16 +1,22 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+    pageEncoding="ISO-8859-1" errorPage="error-page-generic.jsp"%>
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="ISO-8859-1">
-<title>Transactions</title>
-<%@ page import="ph.com.santolticketingsystem.model.user.transaction.UserTransaction" %>
-<%@ page import="ph.com.santolticketingsystem.model.user.transaction.UserTransactions" %>
-<%@ page import="java.util.Iterator" %>
+	<meta charset="ISO-8859-1">
+	<link rel="icon" href="https://www.pikpng.com/pngl/m/11-117927_black-train-icon-train-vector-icon-png-clipart.png" type = "image/x-icon">
+	<% if(session.getAttribute("username") == null)
+	{ 
+		request.setAttribute("errorMessage", "Access Denied. Invalid Credentials.");
+		request.getRequestDispatcher("Login").forward(request, response);
+	} %>
 </head>
 <body>
-<%@ include file="partial/_navbar.jsp"%>
+	<%@ page import="ph.com.santolticketingsystem.model.user.transaction.UserTransaction" %>
+	<%@ page import="ph.com.santolticketingsystem.model.user.transaction.UserTransactions" %>
+	<%@ page import="java.util.Iterator" %>
+	<%@ page import="java.text.DecimalFormat" %>
+	<%@ include file="partial/_navbar.jsp" %>
 	<div class="container" style="width: 100% !important;">
 		<div class="row row-cols-lg-auto">
 			<div class="col-lg-1 align-content-center back-div">
@@ -19,52 +25,55 @@
                 </a>
 			</div>
 		</div>
-		<div class="row row-cols-lg-auto">
+		<div class="row row-cols-lg-auto form-holder">
 			<div class="col-lg-5 d-flex flex-column align-content-center" style="width: 100% !important;">
-				<%
-				Double totalPrice = 0.00;
-				Iterator<UserTransaction> transactions = (Iterator)request.getAttribute("transactions");
-				if(transactions == null){
+				<div>
+				<%!
+					DecimalFormat df = new DecimalFormat("#.##");
+					Double totalPrice = 0.00;
 				%>
-				<div class="table table-light">
-					<table class="table">
-						<tr>
-							<th>Transaction ID<th>
-							<th>Username<th>
-							<th>Date Time<th>
-							<th>Start<th>
-							<th>Stop<th>
-							<th>Price<th>
-						</tr>
+				<%
+					
+					int length = (int)request.getAttribute("length");
+					if(length > 0 && request.getAttribute("length") != null){
+				%>
+					<table class="table table-striped table-hover table-outline-dark">
+						<thead>
+							<tr>
+								<th>Transaction ID</th>
+								<th>Username</th>
+								<th>Date Time</th>
+								<th>Start</th>
+								<th>Stop</th>
+								<th>Price</th>
+							</tr>
+						</thead>	
 						<%
-								while(transactions.hasNext()){
-								UserTransaction transaction = (UserTransaction) transactions.next();
-								
-								String TransactionID = String.valueOf(transaction.getTransactionID());
-								String Username = String.valueOf(transaction.getUsername());
-								String DateTime = String.valueOf(transaction.getDateTime());
-								String Start = String.valueOf(transaction.getStart());
-								String Stop = String.valueOf(transaction.getDestination());
-								String Price = String.valueOf(transaction.getPrice());
-								
-								Double subTotal = transaction.getPrice();
+							length--;
+							while(length >= 0){
+								String TransactionID = "TransactionID" + length;
+								String Username = "Username" + length;
+								String DateTime = "DateTime" + length;
+								String Start = "Start" + length;
+								String Stop = "Stop" + length;
+								String Price = "Price" + length;
 						%>
 						<tr>
-							<td><%= TransactionID %><td>
-							<td><%= Username %><td>
-							<td><%= DateTime %><td>
-							<td><%= Start %><td>
-							<td><%= Stop %><td>
-							<td><%= Price %><td>
+							<td><%= request.getAttribute(TransactionID) %></td>
+							<td><%= request.getAttribute(Username) %></td>
+							<td><%= request.getAttribute(DateTime) %></td>
+							<td><%= request.getAttribute(Start) %></td>
+							<td><%= request.getAttribute(Stop) %></td>
+							<td><%= request.getAttribute(Price) %></td>
 						</tr>
-						<%
-								totalPrice += subTotal;
-						}
+						<%	
+								length--;
+							}
 						%>
-						<tr>
-							<td><%= Double.toString(totalPrice) %> <td>
-						</tr>
-						<%} 
+						<%-- throw new Exception("Exception message"); --%>
+						</table>
+						<%
+						} 
 						else{ %>
 							<div class="alert alert-danger" role="alert">
 								<h2>No Transactions</h2>
@@ -73,7 +82,6 @@
 						<%
 						}
 						%>
-					</table>
 				</div>
 			</div>
 		</div>

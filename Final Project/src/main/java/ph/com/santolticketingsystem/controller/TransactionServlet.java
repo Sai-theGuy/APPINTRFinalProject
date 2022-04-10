@@ -39,6 +39,8 @@ public class TransactionServlet extends HttpServlet {
 			session.setAttribute("passengerType", passengerType);
 			System.out.println("Current session state (TransactionServlet): " + username + ", " + passengerType);
 			System.out.println();
+			System.out.println("Redirecting to Transactions (TransactionServlet)");
+			System.out.println();
 			request.getRequestDispatcher("Transactions").forward(request, response);
 		}
 	}

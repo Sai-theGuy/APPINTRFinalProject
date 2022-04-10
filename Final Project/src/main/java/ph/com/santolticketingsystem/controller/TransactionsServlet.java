@@ -29,7 +29,6 @@ public class TransactionsServlet extends HttpServlet {
 		String username = (String)session.getAttribute("username");
 		String passengerType = (String)session.getAttribute("passengerType");
 		
-		System.out.println();
 		System.out.println("Current session state (TransactionsServlet): " + username + ", " + passengerType);
 		System.out.println();
 		
@@ -43,25 +42,35 @@ public class TransactionsServlet extends HttpServlet {
 		}
 		else {
 			UserIterator transactions = SingletonDB.selectTransactions(
-					getServletContext().getInitParameter("jdbcDriver")
-					, getServletContext().getInitParameter("jdbcUrl")
-					, getServletContext().getInitParameter("dbUserName")
-					, getServletContext().getInitParameter("dbUserPassword")
-					, username
-				);
+				getServletContext().getInitParameter("jdbcDriver")
+				, getServletContext().getInitParameter("jdbcUrl")
+				, getServletContext().getInitParameter("dbUserName")
+				, getServletContext().getInitParameter("dbUserPassword")
+				, username
+			);
+			
+			Iterator<UserTransaction> trans = transactions.createIterator();
+			int i = 0;
+			while(trans.hasNext()) {
+				UserTransaction tranz =  trans.next();
+				System.out.println("ID: " + tranz.getTransactionID() + ", Username: " + tranz.getUsername() + ", DateTime: " + tranz.getDateTime() 
+					+ ", Start: " + tranz.getStart() + ", Stop: " + tranz.getDestination() + ", Price: " + tranz.getPrice());
 				
-				Iterator<UserTransaction> trans = transactions.createIterator();
+				request.setAttribute("TransactionID"+i, tranz.getTransactionID());
+				request.setAttribute("Username"+i, tranz.getUsername());
+				request.setAttribute("DateTime"+i, tranz.getDateTime());
+				request.setAttribute("Start"+i, tranz.getStart());
+				request.setAttribute("Stop"+i, tranz.getDestination());
+				request.setAttribute("Price"+i, tranz.getPrice());
 				
-				while(trans.hasNext()) {
-					UserTransaction tranz =  trans.next();
-					System.out.println(tranz.getTransactionID() + " " + tranz.getUsername() + " " + tranz.getDateTime() + " "
-							+ tranz.getStart() + " " + tranz.getDestination() + " " + tranz.getPrice());
-				}
-				System.out.println();
-				
-				request.setAttribute("transactions", trans);
-				request.getRequestDispatcher("/transactions.jsp").forward(request, response);
+				i++;
+			}
+			System.out.println();
+			
+			System.out.println("Redirecting to transactions.jsp (TransactionsServlet)");
+			System.out.println();
+			request.setAttribute("length", i);
+			request.getRequestDispatcher("transactions.jsp").include(request, response);
 		}
 	}
-
 }

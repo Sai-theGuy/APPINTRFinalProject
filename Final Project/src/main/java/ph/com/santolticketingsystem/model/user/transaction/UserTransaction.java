@@ -1,8 +1,13 @@
 package ph.com.santolticketingsystem.model.user.transaction;
 
-import java.util.Iterator;
-
 public class UserTransaction {
+	
+	private int TransactionID;
+	private String Username;
+	private String DateTime;
+	private String Start;
+	private String Destination;
+	private Double Price;
 	
 	// for retrieval
 	public UserTransaction(int TransactionID, String Username, String DateTime, String Start, String Destination, Double Price)
@@ -23,13 +28,6 @@ public class UserTransaction {
 		this.Destination = Destination;
 		this.Price = Price;
 	}
-	
-	private int TransactionID;
-	private String Username;
-	private String DateTime;
-	private String Start;
-	private String Destination;
-	private Double Price;
 	
 	public int getTransactionID() {
 		return TransactionID;

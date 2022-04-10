@@ -31,12 +31,14 @@ public class TicketMachineServlet extends HttpServlet {
 			
 			request.setAttribute("UserName", UserName);
 			request.setAttribute("PassWord", PassWord);
+			System.out.println("Redirecting to UserAuthenticate (TicketMachineServlet)");
+			System.out.println();
 			request.getRequestDispatcher("UserAuthenticate").forward(request, response);
 		}
 		else {
 			session.setAttribute("username", username);
 			session.setAttribute("passengerType", passengerType);
-			System.out.println("Current session state (TicketMachineServlet): " + username + ", " + passengerType);
+			System.out.println("Redirecting to buyticket.jsp (TicketMachineServlet)");
 			System.out.println();
 			request.getRequestDispatcher("buyticket.jsp").forward(request, response);
 		}

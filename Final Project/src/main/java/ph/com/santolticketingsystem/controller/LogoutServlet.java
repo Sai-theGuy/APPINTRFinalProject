@@ -34,6 +34,8 @@ public class LogoutServlet extends HttpServlet {
 			System.out.println("You have successfully logged out.");
 			System.out.println();
 			session.setAttribute("successMessage", "You have successfully logged out.");
+			System.out.println("Redirecting to Login (LogoutServlet)");
+			System.out.println();
 	        request.getRequestDispatcher("Login").include(request, response);
 	        return;
 		}

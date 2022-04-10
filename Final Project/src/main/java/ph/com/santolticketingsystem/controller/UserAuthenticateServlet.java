@@ -58,7 +58,7 @@ public class UserAuthenticateServlet extends HttpServlet {
 			if(username != null || passengerType != null){	
 				// redirect to home page
 				System.out.println("Current session state (UserAuthenticateServlet): " + username + ", " + passengerType);
-				System.out.println("Redirecting to home.jsp (UserAuthenticateServlet)");
+				System.out.println("Redirecting to Home (UserAuthenticateServlet)");
 				System.out.println();
 				request.getRequestDispatcher("Home").forward(request, response);
 			}
@@ -69,7 +69,7 @@ public class UserAuthenticateServlet extends HttpServlet {
 		else {
 			// if not valid login
 			// set a error message first before sending the response
-			request.setAttribute("errorMessage", "Session is Invalid");
+			request.setAttribute("errorMessage", "Access Denied. Invalid Credentials.");
 			request.getRequestDispatcher("Login").forward(request, response);
 		}
 				
